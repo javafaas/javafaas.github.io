@@ -1,123 +1,48 @@
 ---
 layout: default
 ---
+![FAASJ Logo](https://habrastorage.org/webt/nj/ii/tr/njiitrvu9d27rb91dbzzw0iw7sy.png)
 
-Text can be **bold**, _italic_, or ~~strikethrough~~.
+**FaaSJ makes it simple to deploy existing code to Kubernetes!**
 
-[Link to another page](./another-page.html).
+Serverless is not about the physical absence of servers. It is a new approach to building systems in the cloud.
+FaaSJ is a 100% pure Java serverless framework.
 
-There should be whitespace between paragraphs.
+## Main features
 
-There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.
+*   Easy to deploy
+*   Stateless
+*   Scalable
+*   Event-driven
+*   Fast
 
-# Header 1
+## How to start
+#### Setup a Kubernetes cluster
+* Install k3d
 
-This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.
+* Start a cluster
 
-## Header 2
+* `k3d cluster create CLUSTER_NAME` to create a new single-node cluster.
+`k3d kubeconfig merge CLUSTER_NAME --switch-context` to update your default kubeconfig
 
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
-
-### Header 3
-
-```js
-// Javascript code with syntax highlighting.
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
-}
+#### Deploy FaaSJ
+Add the FaaSJ helm chart:
 ```
-
-```ruby
-# Ruby code with syntax highlighting
-GitHubPages::Dependencies.gems.each do |gem, version|
-  s.add_dependency(gem, "= #{version}")
-end
+helm repo add faasj https://faasj.github.io/helm-chart/
 ```
-
-#### Header 4
-
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-
-##### Header 5
-
-1.  This is an ordered list following a header.
-2.  This is an ordered list following a header.
-3.  This is an ordered list following a header.
-
-###### Header 6
-
-| head1        | head two          | three |
-|:-------------|:------------------|:------|
-| ok           | good swedish fish | nice  |
-| out of stock | good and plenty   | nice  |
-| ok           | good `oreos`      | hmm   |
-| ok           | good `zoute` drop | yumm  |
-
-### There's a horizontal rule below this.
-
-* * *
-
-### Here is an unordered list:
-
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
-
-### And an ordered list:
-
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
-
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-
-### Small image
-
-![Octocat](https://github.githubassets.com/images/icons/emoji/octocat.png)
-
-### Large image
-
-![Branching](https://guides.github.com/activities/hello-world/branching.png)
-
-
-### Definition lists can be used with HTML syntax.
-
-<dl>
-<dt>Name</dt>
-<dd>Godzilla</dd>
-<dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
-<dt>Color</dt>
-<dd>Green</dd>
-</dl>
+Now deploy FaaSJ from the helm chart repo:
 
 ```
-Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long. This line should be long enough to demonstrate this.
+helm repo update && helm upgrade faasj --install faasj/faasj \
+--namespace faasj  \
+--set generateBasicAuth=true \
+--set console=true
 ```
+#### Log in
+Log into your FaaSJ console:
 
 ```
-The final element.
+kubectl port-forward svc/console -n faasj 8080:8080
 ```
+Now you can deploy new functions!
+
